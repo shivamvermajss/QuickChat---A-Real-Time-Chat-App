@@ -13,7 +13,6 @@ export const ChatProvider = ({ children }) => {
 
     const { socket, axios } = useContext(AuthContext);
 
-    // get all users
     const getAllUsers = async () => {
         try {
             const { data } = await axios.get('/api/messages/users');
@@ -26,7 +25,6 @@ export const ChatProvider = ({ children }) => {
         }
     };
 
-    // get messages
     const getMessages = async (userId) => {
         try {
             const { data } = await axios.get(`/api/messages/${userId}`);
@@ -38,7 +36,6 @@ export const ChatProvider = ({ children }) => {
         }
     };
 
-    // send message
     const sendMessage = async (messageData) => {
         try {
             const { data } = await axios.post(`/api/messages/send/${selectedChat._id}`, messageData);
@@ -52,12 +49,11 @@ export const ChatProvider = ({ children }) => {
         }
     };
 
-    // subscribe
     const subscribeToMessages = () => {
         if (!socket) return;
 
         socket.on('newMessage', (newMessage) => {
-            if (selectedChat && newMessage.senderId === selectedChat._id) { // ✅ fixed
+            if (selectedChat && newMessage.senderId === selectedChat._id) {
                 newMessage.seen = true;
                 setMessages((prev) => [...prev, newMessage]);
                 axios.put(`/api/messages/mark/${newMessage._id}`);
@@ -72,12 +68,10 @@ export const ChatProvider = ({ children }) => {
         });
     };
 
-    // unsubscribe
     const unsubscribeFromMessages = () => {
         if (socket) socket.off('newMessage');
     };
 
-    
     useEffect(() => {
         subscribeToMessages();
         return () => unsubscribeFromMessages();
@@ -89,11 +83,11 @@ export const ChatProvider = ({ children }) => {
         users,
         selectedChat,
         setSelectedChat,
-        unseenMessages,
-        setUnseenMessages,
-        getAllUsers,   // ✅ fixed name
+        getAllUsers,   // ✅ fixed
         getMessages,
-        sendMessage
+        sendMessage,
+        unseenMessages,
+        setUnseenMessages
     };
 
     return (

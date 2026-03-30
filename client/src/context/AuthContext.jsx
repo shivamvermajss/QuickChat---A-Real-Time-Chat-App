@@ -16,7 +16,6 @@ export const AuthProvider = ({ children }) => {
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [socket, setSocket] = useState(null);
 
-    // check auth
     const checkAuth = async () => {
         try {
             const { data } = await axios.get("/api/auth/check");
@@ -29,7 +28,6 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    // login
     const login = async (state, credentials) => {
         try {
             const { data } = await axios.post(`/api/auth/${state}`, credentials);
@@ -48,7 +46,6 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    // logout
     const logout = () => {
         localStorage.removeItem("token");
         setToken(null);
@@ -56,10 +53,11 @@ export const AuthProvider = ({ children }) => {
         setOnlineUsers([]);
         axios.defaults.headers.common["token"] = null;
         toast.success("Logged out successfully");
+
         socket?.disconnect();
+        setSocket(null); 
     };
 
-    // update profile
     const updateProfile = async (body) => {
         try {
             const { data } = await axios.put("/api/auth/update-profile", body);
@@ -72,22 +70,22 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    // connect socket
     const connectSocket = (userData) => {
         if (!userData || socket?.connected) return;
 
         const newSocket = io(backendUrl, {
-        auth : { 
-                userId: userData._id,
-            }
+            query: { userId: userData._id }
         });
 
         newSocket.connect();
-        setSocket(newSocket);
+
+        newSocket.off("getOnlineUsers");
 
         newSocket.on("getOnlineUsers", (userIds) => {
             setOnlineUsers(userIds);
         });
+
+        setSocket(newSocket);
     };
 
     useEffect(() => {
