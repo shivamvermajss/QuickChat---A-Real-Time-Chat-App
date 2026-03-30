@@ -1,22 +1,41 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import assets from '../assets/assets';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom'
+import { AuthContext } from '../context/AuthContext';
 
 const ProfilePage = () => {
+
+  const { authUser, updateProfile } = useContext(AuthContext);
+
   const [selectedimg, setSelectedimg] = useState(null);
   const navigate = useNavigate();
-  const [name, setName] = useState(" shivam verma");
-  const [bio, setBio] = useState(" hi everyone, i am using Quick Chat");
+  const [name, setName] = useState(authUser?.fullName || "");   // ✅ FIXED
+  const [bio, setBio] = useState(authUser?.bio || "");         // ✅ FIXED
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    navigate('/')
+
+    if(!selectedimg){
+      await updateProfile({ fullName: name, bio });   // ✅ FIXED
+      navigate('/')
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.readAsDataURL(selectedimg);
+
+    reader.onload = async () => {
+      const base64Image = reader.result;
+      await updateProfile({ profilePic: base64Image, fullName: name, bio }); // ✅ FIXED
+      navigate('/');  
+    }
   }
 
   return (
     <div className='min-h-screen bg-cover bg-no-repeat flex items-center justify-center'>
       <div className='w-5/6 max-w-2xl backdrop-blur-2xl text-gray-300 border-2 border-gray-600 flex items-center justify-between max-sm:flex-col-reverse rounded-lg'>
+        
         <form onSubmit={handleSubmit} className='flex flex-col gap-5 p-10 flex-1'>
           <h3 className='text-lg'> Profile details</h3>
 
@@ -62,7 +81,11 @@ const ProfilePage = () => {
           </button>
         </form>
 
-        <img src={assets.logo_icon} alt=""  className='max-w-44  aspect-square rounded-full max-10 max-sm:mt-10 '/>
+        <img 
+          src={authUser?.profilePic || assets.logo_icon} 
+          alt=""  
+          className={`max-w-44 aspect-square rounded-full max-sm:mt-10 ${selectedimg && 'rounded-full'}`}
+        />
       </div>
     </div>
   )
