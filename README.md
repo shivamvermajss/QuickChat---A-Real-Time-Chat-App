@@ -7,7 +7,7 @@ Users can chat, send images, see online status, and manage profiles — similar 
 
 ## 🚀 Live Demo
 
-🔗 Demo : (https://quick-chat-a-real-ti-git-920bf4-shivam-vermas-projects-e3887cd1.vercel.app/)
+🔗 Demo : ((https://quick-chat-a-real-time-chat-app.vercel.app/))
 
 
 ---
