@@ -7,8 +7,8 @@ Users can chat, send images, see online status, and manage profiles — similar 
 
 ## 🚀 Live Demo
 
-🔗 Frontend: https://quick-chat-a-real-time-chat-app.vercel.app  
-🔗 Backend: (Add your Render backend URL here)
+🔗 Demo : (https://quick-chat-a-real-ti-git-920bf4-shivam-vermas-projects-e3887cd1.vercel.app/)
+
 
 ---
 
@@ -45,22 +45,7 @@ Users can chat, send images, see online status, and manage profiles — similar 
 
 ---
 
-## 📁 Project Structure
-QuickChat/
-│
-├── client/ # React frontend
-│ ├── src/
-│ ├── public/
-│ └── package.json
-│
-├── server/ # Node + Express backend
-│ ├── controllers/
-│ ├── routes/
-│ ├── models/
-│ ├── lib/
-│ └── package.json
-│
-└── README.md
+
 
 
 
@@ -114,8 +99,8 @@ This project is licensed under the MIT License.
 
 **Shivam Verma**
 
-- GitHub: https://github.com/your-username  
-- LinkedIn: (Add your LinkedIn link)
+- GitHub:(https://github.com/shivamvermajss)
+- LinkedIn: www.linkedin.com/in/shivam-verma-227b37384
 
 ---
 
