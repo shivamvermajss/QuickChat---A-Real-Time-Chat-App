@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 
 const ChatContainer = () => {
 
-    const { messages, selectedChat, setSelectedChat, sendMessage, getMessages } = useContext(ChatContext); // ✅ FIXED
+    const { messages, selectedChat, setSelectedChat, sendMessage, getMessages } = useContext(ChatContext);
 
     const { authUser, onlineUsers } = useContext(AuthContext);
 
@@ -58,9 +58,9 @@ const ChatContainer = () => {
 
                 <p className='flex-1 text-lg text-white flex items-center gap-2'>
                     {selectedChat.fullName}
-                    {onlineUsers.includes(selectedChat._id) && (
+                    {onlineUsers.includes(selectedChat._id) &&
                         <span className='w-2 h-2 rounded-full bg-green-500'></span>
-                    )}
+                    }
                 </p>
 
                 <img onClick={() => setSelectedChat(null)} src={assets.arrow_icon} alt="" className='md:hidden max-w-7 cursor-pointer' />
@@ -70,27 +70,38 @@ const ChatContainer = () => {
             {/* MESSAGES */}
             <div className='flex-1 overflow-y-auto p-3 min-h-0'>
                 <div className='flex flex-col'>
-                    {messages.map((msg, index) => (
-                        <div key={index} className={`flex items-end gap-2 mb-8 ${msg.senderId !== authUser._id && 'flex-row-reverse'}`}>
-                            {msg.image ? (
-                                <img src={msg.image} alt="" className='max-w-[230px] border border-gray-700 rounded-lg overflow-hidden' />
-                            ) : (
-                                <p className={`p-2 max-w-[200px] md:text-sm font-light rounded-lg break-all bg-violet-500/30 text-white ${msg.senderId === authUser._id ? 'rounded-br-none' : 'rounded-bl-none'}`}>
-                                    {msg.text}
-                                </p>
-                            )}
-                            <div className='text-center text-xs'>
-                                <img 
-                                    src={msg.senderId === authUser._id 
-                                        ? authUser?.profilePic || assets.avatar_icon 
-                                        : selectedChat?.profilePic || assets.avatar_icon} 
-                                    alt="" 
-                                    className='w-7 rounded-full' 
-                                />
-                                <p className='text-gray-500'>{formatMessageTime(msg.createdAt)}</p>
+                    {messages.map((msg, index) => {
+
+                        const isMe = msg.senderId?.toString() === authUser?._id?.toString(); // ✅ FIX
+
+                        return (
+                            <div 
+                                key={index} 
+                                className={`flex items-end gap-2 mb-8 ${isMe ? 'flex-row-reverse' : ''}`}
+                            >
+                                {msg.image ? (
+                                    <img src={msg.image} alt="" className='max-w-[230px] border border-gray-700 rounded-lg overflow-hidden' />
+                                ) : (
+                                    <p 
+                                        className={`p-2 max-w-[200px] md:text-sm font-light rounded-lg break-all bg-violet-500/30 text-white ${isMe ? 'rounded-br-none' : 'rounded-bl-none'}`}
+                                    >
+                                        {msg.text}
+                                    </p>
+                                )}
+
+                                <div className='text-center text-xs'>
+                                    <img 
+                                        src={isMe 
+                                            ? authUser?.profilePic || assets.avatar_icon 
+                                            : selectedChat?.profilePic || assets.avatar_icon} 
+                                        alt="" 
+                                        className='w-7 rounded-full' 
+                                    />
+                                    <p className='text-gray-500'>{formatMessageTime(msg.createdAt)}</p>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        )
+                    })}
                     <div ref={scrollEnd}></div>
                 </div>
             </div>

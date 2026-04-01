@@ -3,11 +3,20 @@ import mongoose from "mongoose";
 const messageSchema = new mongoose.Schema({
     senderId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     receiverId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-    text: { type: String, required: true },
+
+    text: { type: String },
     image: { type: String },
-    seen:{type:Boolean,default:false}
-    
+
+    seen: { type: Boolean, default: false }
+
 }, { timestamps: true });
+
+
+messageSchema.pre("save", function () {
+    if (!this.text && !this.image) {
+        throw new Error("Message must have text or image");
+    }
+});
 
 const Message = mongoose.model("Message", messageSchema);
 export default Message;
